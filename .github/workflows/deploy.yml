@@ -1,60 +1,41 @@
-name: Deploy DVCRM to GitHub Pages
-
+# .github/workflows/deploy.yml
+name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
-
 permissions:
-  contents: write   # needed to push to gh-pages
-
-concurrency:
-  group: pages-${{ github.ref }}
-  cancel-in-progress: true
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: client/package-lock.json
-
-      - name: Install deps
+          cache: 'npm'
+          cache-dependency-path: client/package.json
+      - name: Install & Build
         working-directory: client
-        run: npm ci
-
-      - name: Build (Vite)
-        working-directory: client
-        env:
-          # Add any client env here if needed, e.g. VITE_API_BASE
-          # VITE_API_BASE: /dev/DVCRM/api
-          GITHUB_ACTIONS: 'true'
-        run: npm run build
-
-      - name: Prepare SPA routing (404.html) and disable Jekyll
         run: |
-          cp client/dist/index.html client/dist/404.html
-          echo > client/dist/.nojekyll
-
-      # Optional: also publish your simple /dev/DVCRM checker into the dist
-      # - name: Copy dev checker
-      #   run: |
-      #     mkdir -p client/dist/dev/DVCRM
-      #     cp -r client/public/dev/DVCRM/* client/dist/dev/DVCRM/
-
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v3
+          npm ci
+          npm run build
+          cp dist/index.html dist/404.html   # 👈 SPA refresh fallback
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: client/dist
-          commit_message: "Deploy: ${{ github.sha }}"
+          path: client/dist
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
