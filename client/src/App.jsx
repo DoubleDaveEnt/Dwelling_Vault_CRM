@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom'
 import Header from './components/Header.jsx'
 import Sidebar from './components/Sidebar.jsx'
 import Dashboard from './pages/Dashboard.jsx'
+import Calendar from './pages/Calendar.jsx'
 
 export default function App(){
   return (
@@ -14,6 +15,7 @@ export default function App(){
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/calendar" element={<Calendar />} />
             <Route path="*" element={<div>Not Found</div>} />
           </Routes>
         </main>

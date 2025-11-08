@@ -18,3 +18,18 @@ body{ margin:0; font-family: system-ui,-apple-system, Segoe UI, Roboto, Inter, A
 .grid{ display:grid; grid-template-columns: repeat(2, minmax(280px,1fr)); gap:16px; }
 section{ background:var(--card); border:1px solid var(--muted); border-radius:12px; padding:16px; min-height:120px; }
 .stub{ opacity:.6 } .api{ grid-column:1 / -1; opacity:.8; }
+
+.calendar-container { display: flex; gap: 16px; }
+.calendar { flex: 1; }
+.calendar-header { text-align: center; }
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+.calendar-day { background: var(--card); border: 1px solid var(--muted); border-radius: 8px; padding: 8px; min-height: 100px; }
+.event { background: var(--accent); color: var(--bg); padding: 4px; border-radius: 4px; margin-top: 4px; font-size: 12px; }
+.event-form { width: 300px; }
+.event-form form { display: flex; flex-direction: column; gap: 8px; }
+.event-form input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--muted); background: var(--card); color: var(--text); }
+.event-form button { padding: 10px 12px; background: var(--muted); color: var(--text); border: 0; border-radius: 8px; cursor: pointer; }
+.event-list ul { list-style: none; padding: 0; }
+.event-list li { background: var(--card); border: 1px solid var(--muted); border-radius: 8px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+.event-list button { margin-left: 8px; }
+
